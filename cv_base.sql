@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Czas generowania: 29 Lis 2022, 02:23
+-- Czas generowania: 30 Lis 2022, 09:53
 -- Wersja serwera: 10.4.25-MariaDB
 -- Wersja PHP: 7.4.30
 
@@ -295,15 +295,17 @@ CREATE TABLE `person_basic_info` (
   `birth` date NOT NULL,
   `nationality` varchar(20) COLLATE utf8mb4_polish_ci NOT NULL,
   `photo` varchar(40) COLLATE utf8mb4_polish_ci NOT NULL,
-  `id_driv` int(11) DEFAULT NULL
+  `id_driv` int(11) DEFAULT NULL,
+  `rodo_accept` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_polish_ci;
 
 --
 -- Zrzut danych tabeli `person_basic_info`
 --
 
-INSERT INTO `person_basic_info` (`id_basic`, `id_user`, `surname`, `f_name`, `mail`, `phone_nr`, `birth`, `nationality`, `photo`, `id_driv`) VALUES
-(1, 1, 'Dudek', 'Edyta', 'edyta.dudek@10g.pl', '+48603490310', '1982-02-26', 'polska', 'edyta.jpg', NULL);
+INSERT INTO `person_basic_info` (`id_basic`, `id_user`, `surname`, `f_name`, `mail`, `phone_nr`, `birth`, `nationality`, `photo`, `id_driv`, `rodo_accept`) VALUES
+(1, 1, 'Dudek', 'Edyta', 'edyta.dudek@10g.pl', '+48603490310', '1982-02-26', 'polska', 'edyta.jpg', NULL, 0),
+(2, 2, 'Dudek', 'Bartłomiej', 'bdudek@airforces.pl', '654312987', '1980-07-19', 'polska', 'bd.jpg', 5, 0);
 
 -- --------------------------------------------------------
 
@@ -404,19 +406,6 @@ INSERT INTO `person_lang_skils` (`id_language`, `id_user`, `name_lang`, `else_la
 -- --------------------------------------------------------
 
 --
--- Struktura tabeli dla tabeli `person_rodo_accept`
---
-
-CREATE TABLE `person_rodo_accept` (
-  `id_RODO_opt` int(11) NOT NULL,
-  `id_user` int(11) NOT NULL,
-  `RODO_text` text COLLATE utf8mb4_polish_ci NOT NULL DEFAULT 'Wyrażam zgodę na przetwarzanie moich danych osobowych dla potrzeb niezbędnych do realizacji procesu rekrutacji zgodnie z Rozporządzeniem Parlamentu Europejskiego i Rady (UE) 2016/679 z dnia 27 kwietnia 2016 r. w sprawie ochrony osób fizycznych w związku z przetwarzaniem danych osobowych i w sprawie swobodnego przepływu takich danych oraz uchylenia dyrektywy 95/46/WE (RODO).',
-  `accept_RODO` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_polish_ci;
-
--- --------------------------------------------------------
-
---
 -- Struktura tabeli dla tabeli `users`
 --
 
@@ -509,7 +498,8 @@ ALTER TABLE `person_addresses`
 ALTER TABLE `person_basic_info`
   ADD PRIMARY KEY (`id_basic`),
   ADD KEY `id_user` (`id_user`),
-  ADD KEY `id_driv` (`id_driv`);
+  ADD KEY `id_driv` (`id_driv`),
+  ADD KEY `id_driv_2` (`id_driv`);
 
 --
 -- Indeksy dla tabeli `person_courses_certificates`
@@ -545,13 +535,6 @@ ALTER TABLE `person_lang_skils`
   ADD KEY `id_user` (`id_user`),
   ADD KEY `level_lang` (`level_lang`),
   ADD KEY `name_lang` (`name_lang`);
-
---
--- Indeksy dla tabeli `person_rodo_accept`
---
-ALTER TABLE `person_rodo_accept`
-  ADD PRIMARY KEY (`id_RODO_opt`),
-  ADD KEY `id_user` (`id_user`);
 
 --
 -- Indeksy dla tabeli `users`
@@ -621,7 +604,7 @@ ALTER TABLE `person_addresses`
 -- AUTO_INCREMENT dla tabeli `person_basic_info`
 --
 ALTER TABLE `person_basic_info`
-  MODIFY `id_basic` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_basic` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT dla tabeli `person_courses_certificates`
@@ -646,12 +629,6 @@ ALTER TABLE `person_experience`
 --
 ALTER TABLE `person_lang_skils`
   MODIFY `id_language` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT dla tabeli `person_rodo_accept`
---
-ALTER TABLE `person_rodo_accept`
-  MODIFY `id_RODO_opt` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT dla tabeli `users`
@@ -712,12 +689,6 @@ ALTER TABLE `person_lang_skils`
   ADD CONSTRAINT `person_lang_skils_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`),
   ADD CONSTRAINT `person_lang_skils_ibfk_2` FOREIGN KEY (`level_lang`) REFERENCES `list_level_lang` (`id_lang_lev`),
   ADD CONSTRAINT `person_lang_skils_ibfk_3` FOREIGN KEY (`name_lang`) REFERENCES `list_languages_names` (`id_lang`);
-
---
--- Ograniczenia dla tabeli `person_rodo_accept`
---
-ALTER TABLE `person_rodo_accept`
-  ADD CONSTRAINT `person_rodo_accept_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
